@@ -5,6 +5,9 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
+import ChatRoom from './components/ChatRoom';
+import SignIn from './components/SignIn';
+
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
@@ -23,12 +26,17 @@ const auth = firebase.auth();
 const firestore = firebase.firestore();
 
 function App() {
+
+  const [user] = useAuthState(auth); // null if the user is not signed in.
   return (
     <div className="App">
-      <header className="App-header">
+      <section>
+        {user ? <ChatRoom /> : <SignIn />}
+      </section>
+      <section className="App-header">
         <h1>messagR</h1>
- 
-      </header>
+      </section>
+
     </div>
   );
 }
