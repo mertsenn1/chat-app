@@ -5,7 +5,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, storage, db } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore"; 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Register = () => {
 
@@ -21,42 +21,37 @@ const Register = () => {
         try {
             const res = await createUserWithEmailAndPassword(auth, email, password); 
             
-            // profile photo upload
-            const storageRef = ref(storage, displayName);
+            //Create a unique image name
+            const date = new Date().getTime();
+            const storageRef = ref(storage, `${displayName + date}`);
 
-            const uploadTask = uploadBytesResumable(storageRef, file);
-
-            // 3. Completion observer, called on successful completion
-            uploadTask.on(
-                (error) => {
-                    // Handle unsuccessful uploads
-                    setError(true)
-                }, 
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then( async (downloadURL) => {
-                        await updateProfile(res.user, {
-                            displayName,
-                            photoURL: downloadURL,
-                        });
-
-                        // save to users collection.
-                        await setDoc(doc(db, "users", res.user.uid), {
-                            uid: res.user.uid,
-                            displayName,
-                            email,
-                            photoURL: downloadURL
-                        });
-
-                        await setDoc(doc(db, "userChats", res.user.uid), {});
-
-                        // direct to home page after a successful login.
-                        navigate("/");
-
+            await uploadBytesResumable(storageRef, file).then(() => {
+                getDownloadURL(storageRef).then(async (downloadURL) => {
+                  try {
+                    //Update profile
+                    await updateProfile(res.user, {
+                      displayName,
+                      photoURL: downloadURL,
                     });
-                }
-            );
+                    //create user on firestore
+                    await setDoc(doc(db, "users", res.user.uid), {
+                      uid: res.user.uid,
+                      displayName,
+                      email,
+                      photoURL: downloadURL,
+                    });
+        
+                    //create empty user chats on firestore
+                    await setDoc(doc(db, "userChats", res.user.uid), {});
+                    navigate("/");
+                  } catch (error) {
+                    console.log(error);
+                    setError(true);
+                  }
+                });
+              });
         } catch (error) {
-            setError(true)
+            setError(true);
         }          
     };
 
@@ -77,7 +72,7 @@ const Register = () => {
                     <button>Sign up</button>
                     {error && <span>Something went wrong!</span>}
                 </form>
-                <p>Already have an account? Login</p>
+                <p>Already have an account? <Link to="/login">Login</Link></p>
             </div>
         </div>
 
