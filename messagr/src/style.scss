@@ -162,6 +162,11 @@
         color: #ddddf7;
         border: none;
 
+        .logoimage2{
+          width: 60px;
+          margin-bottom: 5px;
+        }
+
         .logo {
           font-weight: bold;
           @include tablet {
