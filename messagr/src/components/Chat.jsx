@@ -13,12 +13,7 @@ const Chat = () => {
     return (
         <div className='chat'>
             <div className='chatInfo'>
-                <span>{data && data.user.displayName}</span>
-                <div className='chatIcons'>
-                    <img src={Cam} alt=''/>
-                    <img src={Add} alt=''/>
-                    <img src={More} alt=''/>
-                </div>
+                <span className='chatguy'>{data && data.user.displayName}</span>
             </div>
             <Messages />
             <Input />

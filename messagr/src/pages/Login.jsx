@@ -30,7 +30,7 @@ const Login = () => {
                     <input type="email" placeholder='email'/>
                     <input type="password" placeholder='password'/>
                     <button>Login</button>
-                    {error && <span>Something went wrong!</span>}
+                    {error && <span className='spanwrong'>Something went wrong!</span>}
                 </form>
                 <p>Don't have an account? <Link to="/register">Register</Link></p>
             </div>
