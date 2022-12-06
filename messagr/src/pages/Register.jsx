@@ -1,5 +1,6 @@
 import React from 'react';
 import Add from '../img/addAvatar.png';
+import Logo from '../img/logo.png';
 
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, storage, db } from "../firebase";
@@ -58,8 +59,8 @@ const Register = () => {
     return (
         <div className='formContainer'>
             <div className='formWrapper'>
-                <span className='logo'>Messagr</span>
-                <span className='title'>Register</span>
+                <img className='logoimage' src={Logo} alt="" />
+                <div className='title'>Register</div>
                 <form onSubmit={handleSubmit}>
                     <input type="text" placeholder='name'/>
                     <input type="email" placeholder='email'/>
